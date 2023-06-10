@@ -21,7 +21,7 @@ USE `juli` ;
 -- Table `juli`.`Usuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `juli`.`Usuario` (
-  `idUsuario` INT NOT NULL,
+  `idUsuario` INT,
   `nombreUsuario` VARCHAR(45) NULL,
   `fechaAlta` VARCHAR(10) NULL,
   PRIMARY KEY (`idUsuario`))
