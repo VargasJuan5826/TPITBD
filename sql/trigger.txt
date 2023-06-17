@@ -1,0 +1,29 @@
+-- ----------------------------CONCEPTO----------------------------
+
+CREATE TABLE `tpi`.`Concepto_log` (
+  `idLog` INT NOT NULL AUTO_INCREMENT,
+  `idConcepto`INT NOT NULL,
+  `nombreConcepto` VARCHAR(20) NOT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idLog`));
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN CONCEPTO
+DELIMITER $$
+CREATE TRIGGER concepto_update BEFORE UPDATE ON concepto FOR EACH ROW
+BEGIN
+	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUES(OLD.idConcepto, OLD.nombreConcepto, USER(),'UPDATE BEFORE');
+	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUE(NEW.idConcepto, NEW.nombreConcepto, USER(), 'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS NUEVOS CONCEPTOS QUE SE INSERTEN EN CONCEPTO
+DELIMITER $$
+CREATE TRIGGER concepto_insert BEFORE UPDATE ON concepto FOR EACH ROW
+BEGIN
+	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUE(NEW.idConcepto, NEW.nombreConcepto, USER(), 'INSERT');
+END;
+$$ DELIMITER ;
+
+-- --------------------------------------------------------
