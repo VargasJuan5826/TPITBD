@@ -23,7 +23,7 @@ USE `tpi` ;
 CREATE TABLE IF NOT EXISTS `tpi`.`Usuario` (
   `idUsuario` INT,
   `nombreUsuario` VARCHAR(45) NULL,
-  `fechaAlta` VARCHAR(10) NULL,
+  `fechaAlta` DATETIME NULL,
   PRIMARY KEY (`idUsuario`))
 ENGINE = InnoDB;
 
@@ -44,8 +44,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tpi`.`Cuenta` (
   `idCuenta` INT NOT NULL,
-  `fechaAlta` VARCHAR(10) NULL,
-  `fechaBaja` VARCHAR(10) NULL,
+  `fechaAlta` DATETIME NULL,
+  `fechaBaja` DATETIME NULL,
   `Usuario_idUsuario` INT NOT NULL,
   `Medidor_idMedidor` INT NOT NULL,
   PRIMARY KEY (`idCuenta`),
@@ -69,7 +69,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tpi`.`Mediciones` (
   `periodo` INT NOT NULL,
-  `fechaLectura` VARCHAR(10) NULL,
+  `fechaLectura` DATETIME NULL,
   `lectura` FLOAT NULL,
   `Cuenta_idCuenta` INT NOT NULL,
   PRIMARY KEY (`periodo`),
@@ -87,7 +87,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tpi`.`Factura` (
   `idFactura` INT NOT NULL,
-  `fechaEmision` VARCHAR(10) NULL,
+  `fechaEmision` DATETIME NULL,
   `consumo` FLOAT NULL,
   `totalPagar` FLOAT NULL,
   `Mediciones_periodo` INT NOT NULL,
