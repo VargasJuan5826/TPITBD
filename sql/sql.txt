@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema juli
+-- Schema tpi
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema juli
+-- Schema tpi
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `juli` DEFAULT CHARACTER SET utf8 ;
-USE `juli` ;
+CREATE SCHEMA IF NOT EXISTS `tpi` DEFAULT CHARACTER SET utf8 ;
+USE `tpi` ;
 
 -- -----------------------------------------------------
--- Table `juli`.`Usuario`
+-- Table `tpi`.`Usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Usuario` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Usuario` (
   `idUsuario` INT,
   `nombreUsuario` VARCHAR(45) NULL,
   `fechaAlta` VARCHAR(10) NULL,
@@ -29,9 +29,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Medidor`
+-- Table `tpi`.`Medidor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Medidor` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Medidor` (
   `idMedidor` INT NOT NULL,
   `numeroMedidor` VARCHAR(20) NULL,
   `modeloMedidor` VARCHAR(20) NULL,
@@ -40,9 +40,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Cuenta`
+-- Table `tpi`.`Cuenta`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Cuenta` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Cuenta` (
   `idCuenta` INT NOT NULL,
   `fechaAlta` VARCHAR(10) NULL,
   `fechaBaja` VARCHAR(10) NULL,
@@ -53,21 +53,21 @@ CREATE TABLE IF NOT EXISTS `juli`.`Cuenta` (
   INDEX `fk_Cuenta_Medidor1_idx` (`Medidor_idMedidor` ASC) VISIBLE,
   CONSTRAINT `fk_Cuenta_Usuario`
     FOREIGN KEY (`Usuario_idUsuario`)
-    REFERENCES `juli`.`Usuario` (`idUsuario`)
+    REFERENCES `tpi`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Cuenta_Medidor1`
     FOREIGN KEY (`Medidor_idMedidor`)
-    REFERENCES `juli`.`Medidor` (`idMedidor`)
+    REFERENCES `tpi`.`Medidor` (`idMedidor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Mediciones`
+-- Table `tpi`.`Mediciones`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Mediciones` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Mediciones` (
   `periodo` INT NOT NULL,
   `fechaLectura` VARCHAR(10) NULL,
   `lectura` FLOAT NULL,
@@ -76,16 +76,16 @@ CREATE TABLE IF NOT EXISTS `juli`.`Mediciones` (
   INDEX `fk_Mediciones_Cuenta1_idx` (`Cuenta_idCuenta` ASC) VISIBLE,
   CONSTRAINT `fk_Mediciones_Cuenta1`
     FOREIGN KEY (`Cuenta_idCuenta`)
-    REFERENCES `juli`.`Cuenta` (`idCuenta`)
+    REFERENCES `tpi`.`Cuenta` (`idCuenta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Factura`
+-- Table `tpi`.`Factura`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Factura` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Factura` (
   `idFactura` INT NOT NULL,
   `fechaEmision` VARCHAR(10) NULL,
   `consumo` FLOAT NULL,
@@ -95,16 +95,16 @@ CREATE TABLE IF NOT EXISTS `juli`.`Factura` (
   INDEX `fk_Factura_Mediciones1_idx` (`Mediciones_periodo` ASC) VISIBLE,
   CONSTRAINT `fk_Factura_Mediciones1`
     FOREIGN KEY (`Mediciones_periodo`)
-    REFERENCES `juli`.`Mediciones` (`periodo`)
+    REFERENCES `tpi`.`Mediciones` (`periodo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Concepto`
+-- Table `tpi`.`Concepto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Concepto` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Concepto` (
   `idConcepto` INT NOT NULL,
   `nombreConcepto` VARCHAR(20) NULL,
   PRIMARY KEY (`idConcepto`))
@@ -112,9 +112,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`ConceptoxCuenta`
+-- Table `tpi`.`ConceptoxCuenta`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`ConceptoxCuenta` (
+CREATE TABLE IF NOT EXISTS `tpi`.`ConceptoxCuenta` (
   `Cuenta_idCuenta` INT NOT NULL,
   `Concepto_idConcepto` INT NOT NULL,
   `Valor` FLOAT NULL,
@@ -123,21 +123,21 @@ CREATE TABLE IF NOT EXISTS `juli`.`ConceptoxCuenta` (
   INDEX `fk_Cuenta_has_Concepto_Cuenta1_idx` (`Cuenta_idCuenta` ASC) VISIBLE,
   CONSTRAINT `fk_Cuenta_has_Concepto_Cuenta1`
     FOREIGN KEY (`Cuenta_idCuenta`)
-    REFERENCES `juli`.`Cuenta` (`idCuenta`)
+    REFERENCES `tpi`.`Cuenta` (`idCuenta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Cuenta_has_Concepto_Concepto1`
     FOREIGN KEY (`Concepto_idConcepto`)
-    REFERENCES `juli`.`Concepto` (`idConcepto`)
+    REFERENCES `tpi`.`Concepto` (`idConcepto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`FacturaDetalle`
+-- Table `tpi`.`FacturaDetalle`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`FacturaDetalle` (
+CREATE TABLE IF NOT EXISTS `tpi`.`FacturaDetalle` (
   `idRenglon` INT NOT NULL,
   `costoUnitario` FLOAT NULL,
   `Factura_idFactura` INT NOT NULL,
@@ -148,21 +148,21 @@ CREATE TABLE IF NOT EXISTS `juli`.`FacturaDetalle` (
   INDEX `fk_FacturaDetalle_Cuenta_has_Concepto1_idx` (`Cuenta_has_Concepto_Cuenta_idCuenta` ASC, `Cuenta_has_Concepto_Concepto_idConcepto` ASC) VISIBLE,
   CONSTRAINT `fk_FacturaDetalle_Factura1`
     FOREIGN KEY (`Factura_idFactura`)
-    REFERENCES `juli`.`Factura` (`idFactura`)
+    REFERENCES `tpi`.`Factura` (`idFactura`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_FacturaDetalle_Cuenta_has_Concepto1`
     FOREIGN KEY (`Cuenta_has_Concepto_Cuenta_idCuenta` , `Cuenta_has_Concepto_Concepto_idConcepto`)
-    REFERENCES `juli`.`ConceptoxCuenta` (`Cuenta_idCuenta` , `Concepto_idConcepto`)
+    REFERENCES `tpi`.`ConceptoxCuenta` (`Cuenta_idCuenta` , `Concepto_idConcepto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `juli`.`Costo`
+-- Table `tpi`.`Costo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `juli`.`Costo` (
+CREATE TABLE IF NOT EXISTS `tpi`.`Costo` (
   `idCosto` INT NOT NULL,
   `mtsDesde` INT NULL,
   `mtsHasta` INT NULL,

@@ -1,0 +1,42 @@
+version: '3.3'
+
+networks:
+  tbd-network:
+      
+services:
+
+  db:
+    container_name: tbd-mysql-service
+    image: mysql:latest
+    volumes:
+      - "./tbd/.mysql/db:/var/lib/mysql"
+      - "./tbd/.mysql/defaults:/docker-entrypoint-initdb.d"
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: tpi
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    networks:
+      tbd-network:
+        aliases:
+          - db.tbd.localhost
+     
+
+  phpmyadmin:
+    container_name: tbd-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - 8088:80
+    environment:
+      PMA_HOST: db.tbd.localhost
+      PMA_PORT: 3306
+    networks:
+      tbd-network:
+        aliases:
+          - phpmyadmin.tbd.localhost
+
+  
