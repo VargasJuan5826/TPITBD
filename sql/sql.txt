@@ -25,7 +25,7 @@ USE `tpi`;
 
 DROP TABLE IF EXISTS `Concepto`;
 CREATE TABLE IF NOT EXISTS `Concepto` (
-  `idConcepto` int NOT NULL,
+  `idConcepto` int NOT NULL AUTO_INCREMENT,
   `nombreConcepto` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`idConcepto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `ConceptoxCuenta` (
 
 DROP TABLE IF EXISTS `Costo`;
 CREATE TABLE IF NOT EXISTS `Costo` (
-  `idCosto` int NOT NULL,
+  `idCosto` int NOT NULL AUTO_INCREMENT,
   `mtsDesde` int DEFAULT NULL,
   `mtsHasta` int DEFAULT NULL,
   `valorMetro` float DEFAULT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `Costo_Log` (
 
 DROP TABLE IF EXISTS `Cuenta`;
 CREATE TABLE IF NOT EXISTS `Cuenta` (
-  `idCuenta` int NOT NULL,
+  `idCuenta` int NOT NULL AUTO_INCREMENT,
   `fechaAlta` datetime DEFAULT NULL,
   `fechaBaja` datetime DEFAULT NULL,
   `Usuario_idUsuario` int NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `Cuenta` (
 
 DROP TABLE IF EXISTS `Factura`;
 CREATE TABLE IF NOT EXISTS `Factura` (
-  `idFactura` int NOT NULL,
+  `idFactura` int NOT NULL AUTO_INCREMENT,
   `fechaEmision` datetime DEFAULT NULL,
   `consumo` float DEFAULT NULL,
   `totalPagar` float DEFAULT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `Factura` (
 
 DROP TABLE IF EXISTS `FacturaDetalle`;
 CREATE TABLE IF NOT EXISTS `FacturaDetalle` (
-  `idRenglon` int NOT NULL,
+  `idRenglon` int NOT NULL  AUTO_INCREMENT,
   `costoUnitario` float DEFAULT NULL,
   `Cuenta_has_Concepto_Cuenta_idCuenta` int NOT NULL,
   `Cuenta_has_Concepto_Concepto_idConcepto` int NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `Mediciones` (
 
 DROP TABLE IF EXISTS `Medidor`;
 CREATE TABLE IF NOT EXISTS `Medidor` (
-  `idMedidor` int NOT NULL,
+  `idMedidor` int NOT NULL AUTO_INCREMENT,
   `numeroMedidor` varchar(20) DEFAULT NULL,
   `modeloMedidor` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`idMedidor`)
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `Medidor` (
 
 DROP TABLE IF EXISTS `Usuario`;
 CREATE TABLE IF NOT EXISTS `Usuario` (
-  `idUsuario` int NOT NULL,
+  `idUsuario` int NOT NULL AUTO_INCREMENT,
   `nombreUsuario` varchar(45) DEFAULT NULL,
   `fechaAlta` datetime DEFAULT NULL,
   PRIMARY KEY (`idUsuario`)
