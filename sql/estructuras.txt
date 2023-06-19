@@ -194,6 +194,8 @@ ALTER TABLE `Factura`
   ADD CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`mediciones_periodo`) REFERENCES `Mediciones` (`periodo`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `factura_ibfk_2` FOREIGN KEY (`cuenta_idCuenta`) REFERENCES `Mediciones` (`Cuenta_idCuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+ALTER TABLE `Mediciones` ADD FOREIGN KEY (`Cuenta_idCuenta`) REFERENCES `Cuenta`(`idCuenta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 --
 -- Filtros para la tabla `FacturaDetalle`
 --
