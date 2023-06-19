@@ -32,6 +32,82 @@ CREATE TRIGGER concepto_delete BEFORE DELETE ON concepto FOR EACH ROW
 BEGIN
 	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUE(OLD.idConcepto, OLD.nombreConcepto, USER(), 'DELETE');
 END;
+$$ DELIMITER ;
+
+-- ----------------------------MEDICIONES----------------------------
+
+CREATE TABLE `tpi`.`Mediciones_log` (
+  `idLog` INT NOT NULL AUTO_INCREMENT,
+  `periodo`DATE NOT NULL,
+  `fechaLectura` DATETIME NOT NULL,
+  `lectura` FLOAT NOT NULL,
+  `Cuenta_idCuenta` INT NOT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idLog`));
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN MEDICIONES
+DELIMITER $$
+CREATE TRIGGER mediciones_update BEFORE UPDATE ON mediciones FOR EACH ROW
+BEGIN
+	INSERT INTO Mediciones_log(periodo, fechaLectura, lectura, Cuenta_idCuenta, usuario, operacion) VALUES(OLD.periodo, OLD.fechaLectura, OLD.lectura, OLD.Cuenta_idCuenta, USER(),'UPDATE BEFORE');
+	INSERT INTO Mediciones_log(periodo, fechaLectura, lectura, Cuenta_idCuenta, usuario, operacion) VALUE(NEW.periodo, NEW.fechaLectura, NEW.lectura, NEW.Cuenta_idCuenta, USER(), 'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LAS NUEVAS MEDICIONES QUE SE INSERTEN EN MEDICIONES
+DELIMITER $$
+CREATE TRIGGER mediciones_insert AFTER INSERT ON mediciones FOR EACH ROW
+BEGIN
+	INSERT INTO Mediciones_log(periodo, fechaLectura, lectura, Cuenta_idCuenta, usuario, operacion) VALUE(NEW.periodo, NEW.fechaLectura, NEW.lectura, NEW.Cuenta_idCuenta, USER(), 'INSERT');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LAS MEDICIONES QUE SE ELIMENEN EN MEDICIONES
+DELIMITER $$
+CREATE TRIGGER mediciones_delete BEFORE DELETE ON mediciones FOR EACH ROW
+BEGIN
+	INSERT INTO Mediciones_log(periodo, fechaLectura, lectura, Cuenta_idCuenta, usuario, operacion) VALUE(OLD.periodo, OLD.fechaLectura, OLD.lectura, OLD.Cuenta_idCuenta, USER(), 'DELETE');
+END;
+$$ DELIMITER ;
+
+-- ----------------------------ConceptoxCuenta----------------------------
+
+CREATE TABLE `tpi`.`ConceptoxCuenta_log` (
+  `idLog` INT NOT NULL AUTO_INCREMENT,
+  `Cuenta_idCuenta` INT NOT NULL,
+  `Concepto_idConcepto` INT NOT NULL,
+  `Valor` FLOAT NOT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idLog`));
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN ConceptoxCuenta
+DELIMITER $$
+CREATE TRIGGER ConceptoxCuenta_update BEFORE UPDATE ON ConceptoxCuenta FOR EACH ROW
+BEGIN
+	INSERT INTO ConceptoxCuenta_log(Cuenta_idCuenta, Concepto_idConcepto, Valor, usuario, operacion) VALUE(OLD.Cuenta_idCuenta, OLD.Concepto_idConcepto, OLD.Valor, USER(), 'UPDATE BEFORE');
+	INSERT INTO ConceptoxCuenta_log(Cuenta_idCuenta, Concepto_idConcepto, Valor, usuario, operacion) VALUE(NEW.Cuenta_idCuenta, NEW.Concepto_idConcepto, NEW.Valor, USER(), 'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS NUEVOS ConceptoxCuenta QUE SE INSERTEN EN ConceptoxCuenta
+DELIMITER $$
+CREATE TRIGGER ConceptoxCuenta_insert AFTER INSERT ON ConceptoxCuenta FOR EACH ROW
+BEGIN
+	INSERT INTO ConceptoxCuenta_log(Cuenta_idCuenta, Concepto_idConcepto, Valor, usuario, operacion) VALUE(NEW.Cuenta_idCuenta, NEW.Concepto_idConcepto, NEW.Valor, USER(), 'INSERT');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS ConceptoxCuenta QUE SE ELIMENEN EN ConceptoxCuenta
+DELIMITER $$
+CREATE TRIGGER ConceptoxCuenta_delete BEFORE DELETE ON ConceptoxCuenta FOR EACH ROW
+BEGIN
+	INSERT INTO ConceptoxCuenta_log(Cuenta_idCuenta, Concepto_idConcepto, Valor, usuario, operacion) VALUE(OLD.Cuenta_idCuenta, OLD.Concepto_idConcepto, OLD.Valor, USER(), 'DELETE');
+END;
+$$ DELIMITER ;
 
 -- --------------------------------------------------------
 
