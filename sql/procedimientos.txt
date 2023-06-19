@@ -1,0 +1,39 @@
+DELIMITER $$
+CREATE PROCEDURE `NewUsuarioCuenta`(IN `nombreUsuario` VARCHAR(45), IN `idMedidor_param` VARCHAR(20), OUT `resultado` BOOLEAN)
+BEGIN
+    DECLARE resultado_local BOOLEAN DEFAULT false;
+    DECLARE idUsuario INT;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SET resultado_local = false;
+    END;
+
+    START TRANSACTION;
+
+    -- Insertar el usuario
+    INSERT INTO Usuario (nombreUsuario, fechaAlta) VALUES (nombreUsuario, CURRENT_TIMESTAMP);
+
+    -- Obtener el id del usuario insertado
+    SET idUsuario = LAST_INSERT_ID();
+
+    -- Obtener el modelo del medidor
+    SELECT modeloMedidor INTO @modeloMedidor FROM Medidor WHERE idMedidor = idMedidor_param;
+
+    -- Verificar si el medidor existe
+    IF @modeloMedidor IS NULL THEN
+        ROLLBACK;
+        SET resultado_local = false;
+    ELSE
+        -- Insertar la cuenta si existe el medidor
+        INSERT INTO Cuenta (fechaAlta, Usuario_idUsuario, Medidor_idMedidor) VALUES (CURRENT_TIMESTAMP, idUsuario, idMedidor_param);
+        SET resultado_local = true;
+    END IF;
+
+    COMMIT;
+
+    SET resultado = resultado_local;
+END$$
+DELIMITER ;
+

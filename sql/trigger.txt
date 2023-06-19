@@ -27,3 +27,61 @@ END;
 $$ DELIMITER ;
 
 -- --------------------------------------------------------
+
+
+DELIMITER $$
+CREATE TRIGGER costo_insert AFTER INSERT ON Costo FOR EACH ROW
+BEGIN
+  INSERT INTO Costo_log(idCosto, mtsDesde, mtsHasta, valorMetro, usuario, operacion) 
+  VALUES (NEW.idCosto, NEW.mtsDesde, NEW.mtsHasta, NEW.valorMetro, USER(), 'INSERT');
+END;
+$$ DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER costo_update BEFORE UPDATE ON Costo FOR EACH ROW
+BEGIN
+  INSERT INTO Costo_log(idCosto, mtsDesde, mtsHasta, valorMetro, usuario, operacion) 
+  VALUES (OLD.idCosto, OLD.mtsDesde, OLD.mtsHasta, OLD.valorMetro, USER(), 'UPDATE BEFORE');
+  INSERT INTO Costo_log(idCosto, mtsDesde, mtsHasta, valorMetro, usuario, operacion) 
+  VALUES (NEW.idCosto, NEW.mtsDesde, NEW.mtsHasta, NEW.valorMetro, USER(), 'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER costo_delete BEFORE DELETE ON Costo FOR EACH ROW
+BEGIN
+  INSERT INTO Costo_log(idCosto, mtsDesde, mtsHasta, valorMetro, usuario, operacion)
+  VALUES (OLD.idCosto, OLD.mtsDesde, OLD.mtsHasta, OLD.valorMetro, USER(), 'DELETE');
+END;
+$$ DELIMITER ;
+
+
+
+
+DELIMITER $$
+CREATE TRIGGER factura_detalle_delete BEFORE DELETE ON FacturaDetalle FOR EACH ROW
+BEGIN
+  INSERT INTO FacturaDetalle_log(idRenglon, costoUnitario, Cuenta_has_Concepto_Cuenta_idCuenta, Cuenta_has_Concepto_Concepto_idConcepto, idFactura, usuario, operacion)
+  VALUES (OLD.idRenglon, OLD.costoUnitario, OLD.Cuenta_has_Concepto_Cuenta_idCuenta, OLD.Cuenta_has_Concepto_Concepto_idConcepto, OLD.idFactura, USER(), 'DELETE');
+END;
+$$ DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER factura_detalle_insert AFTER INSERT ON FacturaDetalle FOR EACH ROW
+BEGIN
+  INSERT INTO FacturaDetalle_log(idRenglon, costoUnitario, Cuenta_has_Concepto_Cuenta_idCuenta, Cuenta_has_Concepto_Concepto_idConcepto, idFactura, usuario, operacion)
+  VALUES (NEW.idRenglon, NEW.costoUnitario, NEW.Cuenta_has_Concepto_Cuenta_idCuenta, NEW.Cuenta_has_Concepto_Concepto_idConcepto, NEW.idFactura, USER(), 'INSERT');
+END;
+$$ DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER factura_detalle_update BEFORE UPDATE ON FacturaDetalle FOR EACH ROW
+BEGIN
+  INSERT INTO FacturaDetalle_log(idRenglon, costoUnitario, Cuenta_has_Concepto_Cuenta_idCuenta, Cuenta_has_Concepto_Concepto_idConcepto, idFactura, usuario, operacion)
+  VALUES (OLD.idRenglon, OLD.costoUnitario, OLD.Cuenta_has_Concepto_Cuenta_idCuenta, OLD.Cuenta_has_Concepto_Concepto_idConcepto, OLD.idFactura, USER(), 'UPDATE BEFORE');
+  INSERT INTO FacturaDetalle_log(idRenglon, costoUnitario, Cuenta_has_Concepto_Cuenta_idCuenta, Cuenta_has_Concepto_Concepto_idConcepto, idFactura, usuario, operacion)
+  VALUES (NEW.idRenglon, NEW.costoUnitario, NEW.Cuenta_has_Concepto_Cuenta_idCuenta, NEW.Cuenta_has_Concepto_Concepto_idConcepto, NEW.idFactura, USER(), 'UPDATE AFTER');
+END;
+$$ DELIMITER ;
