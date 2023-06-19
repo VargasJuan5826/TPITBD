@@ -53,3 +53,21 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- MAQUETA DE GENERATEFACTURA, REMPLAZAR POR EL QUE VA
+
+DELIMITER $$
+CREATE DEFINER=`root`@`%` PROCEDURE `GenerateFactura`(IN `periodo` DATE)
+BEGIN
+    -- Devolver datos maqueteados como ejemplo
+    SELECT 
+        1 AS idFactura,
+        CURRENT_TIMESTAMP() AS fechaEmision,
+        100.00 AS consumo,
+        50.00 AS totalPagar,
+        periodo AS mediciones_periodo,
+        1 AS cuenta_idCuenta,
+        'Nombre Cliente' AS nombreCliente
+    FROM
+        dual;
+END$$
+DELIMITER ;

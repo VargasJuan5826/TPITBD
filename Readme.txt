@@ -11,5 +11,5 @@ Para el mediciones.php van a necesitar estos procedimientos tener en su db. GetU
  De momento esta asi pero hay q llevarlo a un procedimiento. Que cuando este hecho lo modifico en el php.
 
 -----Facturar
- En facturar necesita un procedimiento que se tiene q llamar CALL GenerateFactura(periodo); 
+ En facturar necesita un procedimiento que se tiene q llamar CALL GenerateFactura(periodo); esta incluido como maqueta para poder probar la funcionalidad.
 
