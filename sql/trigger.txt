@@ -20,11 +20,18 @@ $$ DELIMITER ;
 
 -- CREAMOS UN TRIGGER PARA LOS NUEVOS CONCEPTOS QUE SE INSERTEN EN CONCEPTO
 DELIMITER $$
-CREATE TRIGGER concepto_insert BEFORE UPDATE ON concepto FOR EACH ROW
+CREATE TRIGGER concepto_insert AFTER INSERT ON concepto FOR EACH ROW
 BEGIN
 	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUE(NEW.idConcepto, NEW.nombreConcepto, USER(), 'INSERT');
 END;
 $$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS CONCEPTOS QUE SE ELIMENEN EN CONCEPTO
+DELIMITER $$
+CREATE TRIGGER concepto_delete BEFORE DELETE ON concepto FOR EACH ROW
+BEGIN
+	INSERT INTO Concepto_log(idConcepto, nombreConcepto, usuario, operacion) VALUE(OLD.idConcepto, OLD.nombreConcepto, USER(), 'DELETE');
+END;
 
 -- --------------------------------------------------------
 
