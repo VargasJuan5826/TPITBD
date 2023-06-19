@@ -10,9 +10,9 @@ if (isset($_SESSION['username'])) {
 }
 
 // Datos de conexión a la base de datos
-$servername = 'db.tbd.localhost';
+$servername = 'localhost';
 $username = 'admin';
-$password = 'asd';
+$password = 'assd';
 $database = 'tpi';
 
 // Verificar si se ha enviado el formulario
