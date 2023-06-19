@@ -168,3 +168,86 @@ BEGIN
   VALUES (NEW.idRenglon, NEW.costoUnitario, NEW.Cuenta_has_Concepto_Cuenta_idCuenta, NEW.Cuenta_has_Concepto_Concepto_idConcepto, NEW.idFactura, USER(), 'UPDATE AFTER');
 END;
 $$ DELIMITER ;
+
+
+-- ----------------------------USUARIO----------------------------
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN USUARIO
+DELIMITER $$
+CREATE TRIGGER usuario_update BEFORE UPDATE ON usuario FOR EACH ROW
+BEGIN
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(OLD.idUsuario, OLD.nombreUsuario, OLD.fechaAlta, USER(),'UPDATE BEFORE');
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS NUEVOS USUARIOS QUE SE INSERTEN EN USUARIO
+DELIMITER $$
+CREATE TRIGGER usuario_insert AFTER INSERT ON usuario FOR EACH ROW
+BEGIN
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'INSERT');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS USUARIOS QUE SE ELIMENEN EN USUARIO
+DELIMITER $$
+CREATE TRIGGER usuario_delete BEFORE DELETE ON usuario FOR EACH ROW
+BEGIN
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'DELETE');
+END;
+$$ DELIMITER ;
+
+--- ----------------------------MEDIDOR----------------------------
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN MEDIDOR
+DELIMITER $$
+CREATE TRIGGER medidor_update BEFORE UPDATE ON medidor FOR EACH ROW
+BEGIN
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(OLD.idMedidor, OLD.numeroMedidor, OLD.modeloMedidor, USER(),'UPDATE BEFORE');
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS NUEVOS MEDIDORES QUE SE INSERTEN EN MEDIDOR
+DELIMITER $$
+CREATE TRIGGER medidor_insert AFTER INSERT ON medidor FOR EACH ROW
+BEGIN
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'INSERT');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LOS MEDIDORES QUE SE ELIMENEN EN MEDIDOR
+DELIMITER $$
+CREATE TRIGGER medidor_delete BEFORE DELETE ON medidor FOR EACH ROW
+BEGIN
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'DELETE');
+END;
+$$ DELIMITER ;
+
+--- ----------------------------CUENTA----------------------------
+
+-- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN CUENTA
+DELIMITER $$
+CREATE TRIGGER cuenta_update BEFORE UPDATE ON cuenta FOR EACH ROW
+BEGIN
+	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'UPDATE BEFORE');
+	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'UPDATE AFTER');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LAS NUEVOS CUENTAS QUE SE INSERTEN EN CUENTA
+DELIMITER $$
+CREATE TRIGGER cuenta_insert AFTER INSERT ON cuenta FOR EACH ROW
+BEGIN
+	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'INSERT');
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN TRIGGER PARA LAS CUENTAS QUE SE ELIMENEN EN CUENTA
+DELIMITER $$
+
+CREATE TRIGGER cuenta_delete BEFORE DELETE ON cuenta FOR EACH ROW
+BEGIN
+	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'DELETE');
+END;
+$$ DELIMITER ;

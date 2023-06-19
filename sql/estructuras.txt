@@ -96,6 +96,23 @@ CREATE TABLE IF NOT EXISTS `Cuenta` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `Cuenta_log`
+--
+
+CREATE TABLE IF NOT EXISTS `Cuenta_log` (
+  `idCuentaLog` int NOT NULL AUTO_INCREMENT,
+  `fechaAlta` datetime DEFAULT NULL,
+  `fechaBaja` datetime DEFAULT NULL,
+  `Usuario_idUsuario` int NOT NULL,
+  `Medidor_idMedidor` int NOT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idCuenta`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+--
 -- Estructura de tabla para la tabla `Factura`
 --
 
@@ -159,6 +176,22 @@ CREATE TABLE IF NOT EXISTS `Medidor` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `Medidor_log`
+--
+
+CREATE TABLE IF NOT EXISTS `Medidor_log` (
+  `idMedidor` int NOT NULL AUTO_INCREMENT,
+  `numeroMedidor` varchar(20) DEFAULT NULL,
+  `modeloMedidor` varchar(20) DEFAULT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idMedidor`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `Usuario`
 --
 
@@ -168,6 +201,24 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   `fechaAlta` datetime DEFAULT NULL,
   PRIMARY KEY (`idUsuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Usuario_log`
+--
+
+CREATE TABLE IF NOT EXISTS `Usuario_log` (
+  `idUsuario` int NOT NULL AUTO_INCREMENT,
+  `nombreUsuario` varchar(45) DEFAULT NULL,
+  `fechaAlta` datetime DEFAULT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idUsuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Restricciones para tablas volcadas
