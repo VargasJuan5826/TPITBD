@@ -1,5 +1,62 @@
--- SELECT para testear las funciones
-Select Cuenta_idCuenta, periodo, lectura, obtenerConsumo(Cuenta_idCuenta, periodo, lectura), calcularCostoConsumo(obtenerConsumo(Cuenta_idCuenta, periodo, lectura)) From Mediciones where Cuenta_idCuenta = 1;
+call GenerateFactura("2023-06-01", @cantidadFacturasEmitidas); -- en "2023-06-01" iría una variable que recibe el periodo ingresado en la pagina web
+-- Select @cantidadFacturasEmitidas as 'Cantidad de Facturas Emitidas'; -- este es para ver cuantas facturas se emitieron
+
+-- CREAMOS EL PROCEDIMIENTO DE GENERAR LAS FACTURAS
+DELIMITER $$
+DROP PROCEDURE IF EXISTS GenerateFactura $$
+CREATE PROCEDURE GenerateFactura(in periodoAFacturar Date, out cont int)
+begin
+DECLARE listo BOOLEAN DEFAULT FALSE;
+DECLARE periodo_cursor date;
+DECLARE idcuenta_cursor int;
+DECLARE lectura_cursor float;
+DECLARE mediciones_sin_facturar CURSOR FOR SELECT periodo, Cuenta_idCuenta, lectura from Mediciones m where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and periodo <= periodoAFacturar order by periodo asc;
+DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET listo = TRUE;
+select '0' into cont;
+	Open mediciones_sin_facturar;
+		med_sin_fac_loop: LOOP
+			fetch mediciones_sin_facturar into periodo_cursor, idcuenta_cursor, lectura_cursor;
+            IF listo THEN 
+				LEAVE med_sin_fac_loop;
+            else
+                START TRANSACTION;
+					INSERT INTO `Factura` (`fechaEmision`, `consumo`, `totalPagar`, `mediciones_periodo`, `cuenta_idCuenta`) VALUE (CURRENT_TIMESTAMP, obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor), calcularTotalAPagar(idcuenta_cursor, calcularCostoConsumo(obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor))), periodo_cursor, idcuenta_cursor);
+                    select cont + 1 into cont;
+                    call InsertDetalleFactura(periodo_cursor, idcuenta_cursor, lectura_cursor, (Select idFactura From Factura where mediciones_periodo = periodo_cursor and cuenta_idCuenta = idcuenta_cursor));
+                COMMIT;
+            END IF;
+		End LOOP med_sin_fac_loop;
+	Close mediciones_sin_facturar;
+END;
+$$ DELIMITER ;
+
+-- CREAMOS UN PROCEDIMIENTO PARA INSERTAR LOS DETALLES DE UNA FACTURA
+DELIMITER $$
+DROP PROCEDURE IF EXISTS InsertDetalleFactura $$
+CREATE PROCEDURE InsertDetalleFactura(in periodo_cursor date, in idcuenta_cursor int, in lectura_cursor float, in idFactura int)
+begin
+DECLARE listo_loop2 BOOLEAN DEFAULT FALSE;
+DECLARE idCuentaxConcepto_cursor int;
+DECLARE idConcepto_cursor int;
+DECLARE valor_cursor float;
+DECLARE concepto_x_cuenta CURSOR FOR SELECT Cuenta_idCuenta, Concepto_idConcepto, valor From conceptoxcuenta where Cuenta_idCuenta = idcuenta_cursor order by Concepto_idConcepto asc;
+DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET listo_loop2 = TRUE;
+Open concepto_x_cuenta;
+	concepto_x_cuenta_loop: LOOP
+	fetch concepto_x_cuenta into idCuentaxConcepto_cursor, idConcepto_cursor, valor_cursor;
+	IF listo_loop2 THEN 
+		LEAVE concepto_x_cuenta_loop;
+	else
+		if idConcepto_cursor = 1 then
+			INSERT INTO `facturadetalle` (`costoUnitario`, `Cuenta_has_Concepto_Cuenta_idCuenta`, `Cuenta_has_Concepto_Concepto_idConcepto`, `idFactura`) VALUE (calcularCostoConsumo(obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor)), idCuentaxConcepto_cursor, idConcepto_cursor, idFactura);
+		else
+			INSERT INTO `facturadetalle` (`costoUnitario`, `Cuenta_has_Concepto_Cuenta_idCuenta`, `Cuenta_has_Concepto_Concepto_idConcepto`, `idFactura`) VALUE (valor_cursor, idCuentaxConcepto_cursor, idConcepto_cursor, idFactura);
+		end if;
+	END IF;
+	End LOOP concepto_x_cuenta_loop;
+	Close concepto_x_cuenta;
+END;
+$$ DELIMITER ;
 
 
 -- CREAMOS UNA FUNCION QUE DEVUELVE EL CONSUMO ACTUAL A PARTIR DE UN IDCUENTA Y UNA LECTURAACTUAL
@@ -15,7 +72,6 @@ Begin
     else
         SELECT max(lectura) INTO lectAnt FROM mediciones WHERE Cuenta_idCuenta = idCuenta and periodo = periodoAnt GROUP BY Cuenta_idCuenta;
         select lecturaActual - lectAnt into consumo;
-	-- SELECT max(lectura) FROM mediciones WHERE Cuenta_idCuenta = 1 and periodo = periodoAnterior(Cuenta_idCuenta, "2023-01-01") GROUP BY Cuenta_idCuenta;
 	end if;
 Return consumo;
 End;
@@ -34,7 +90,6 @@ Begin
 Return perAnt;
 End;
 $$ DELIMITER ;
-
 
 -- CREAMOS UNA FUNCION PARA CALCULAR LOS COSTOS DE LOS CONSUMOS
 DELIMITER $$
@@ -68,5 +123,16 @@ Begin
         end if;
     end if;
 Return costoConsumo;
+End;
+$$ DELIMITER ;
+
+-- CREAMOS UNA FUNCION QUE DEVUELVE EL TOTAL A PAGAR DE UNA FACTURA EN PARTICULAR
+DELIMITER $$
+CREATE FUNCTION calcularTotalAPagar(idCuenta INT, costoConsumo FLOAT) RETURNS FLOAT DETERMINISTIC
+Begin
+	DECLARE costoTotal FLOAT;
+    Select sum(valor) Into costoTotal FROM conceptoxcuenta Where idCuenta = Cuenta_idCuenta group by Cuenta_idCuenta;
+    Select costoTotal + costoConsumo into costoTotal;
+Return costoTotal;
 End;
 $$ DELIMITER ;
