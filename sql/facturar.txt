@@ -1,0 +1,72 @@
+-- SELECT para testear las funciones
+Select Cuenta_idCuenta, periodo, lectura, obtenerConsumo(Cuenta_idCuenta, periodo, lectura), calcularCostoConsumo(obtenerConsumo(Cuenta_idCuenta, periodo, lectura)) From Mediciones where Cuenta_idCuenta = 1;
+
+
+-- CREAMOS UNA FUNCION QUE DEVUELVE EL CONSUMO ACTUAL A PARTIR DE UN IDCUENTA Y UNA LECTURAACTUAL
+DELIMITER $$
+CREATE FUNCTION obtenerConsumo(idCuenta Int, periodoAct date, lecturaActual float) RETURNS Float DETERMINISTIC
+Begin
+	DECLARE lectAnt Float;
+    DECLARE consumo Float;
+    declare periodoAnt date;
+    select periodoAnterior(idCuenta, periodoAct) into periodoAnt;
+    if (periodoAnt = periodoAct) then
+		select lecturaActual into consumo;
+    else
+        SELECT max(lectura) INTO lectAnt FROM mediciones WHERE Cuenta_idCuenta = idCuenta and periodo = periodoAnt GROUP BY Cuenta_idCuenta;
+        select lecturaActual - lectAnt into consumo;
+	-- SELECT max(lectura) FROM mediciones WHERE Cuenta_idCuenta = 1 and periodo = periodoAnterior(Cuenta_idCuenta, "2023-01-01") GROUP BY Cuenta_idCuenta;
+	end if;
+Return consumo;
+End;
+$$ DELIMITER ;
+
+-- CREAMOS UNA FUNCION QUE DEVUELVE EL PERIODO ANTERIOR DE UNA MEDICION DADO UN IDCUENTA
+DELIMITER $$
+CREATE FUNCTION periodoAnterior(idCuenta Int, periodoActual date) RETURNS Date DETERMINISTIC
+Begin
+	DECLARE perAnt Date;
+    if periodoActual = (SELECT min(periodo) FROM mediciones WHERE Cuenta_idCuenta = idCuenta GROUP BY Cuenta_idCuenta) then
+		Select periodoActual into perAnt;
+    else
+		SELECT max(periodo) INTO perAnt FROM mediciones WHERE Cuenta_idCuenta = idCuenta AND periodo < periodoActual GROUP BY Cuenta_idCuenta;
+    end if;
+Return perAnt;
+End;
+$$ DELIMITER ;
+
+
+-- CREAMOS UNA FUNCION PARA CALCULAR LOS COSTOS DE LOS CONSUMOS
+DELIMITER $$
+CREATE FUNCTION calcularCostoConsumo(consumo float) RETURNS Float DETERMINISTIC
+Begin
+	declare costoConsumo float;
+    declare cons_aux float;
+	if consumo <= (select mtsDesde FROM costo where idCosto = 2)  then
+		Select valorMetro into costoConsumo from Costo where idCosto = 1; 
+    else
+		if consumo > (select mtsDesde FROM costo where idCosto = 2) AND consumo <= (select mtsHasta FROM costo where idCosto = 2) then
+            Select valorMetro  into costoConsumo from Costo where idCosto = 1;
+            select consumo - 15 into cons_aux;
+            Select costoConsumo + valorMetro * cons_aux into costoConsumo from Costo where idCosto = 2; 
+		else
+			if consumo > (select mtsDesde FROM costo where idCosto = 3) AND consumo <= (select mtsHasta FROM costo where idCosto = 3) then
+				Select valorMetro  into costoConsumo from Costo where idCosto = 1;
+				select consumo - 15 into cons_aux;
+				Select costoConsumo + valorMetro * 5 into costoConsumo from Costo where idCosto = 2;
+                select cons_aux - 5 into cons_aux;
+                Select costoConsumo + valorMetro * cons_aux into costoConsumo from Costo where idCosto = 3;
+            else
+				Select valorMetro  into costoConsumo from Costo where idCosto = 1;
+                select consumo - 15 into cons_aux;
+				Select costoConsumo + valorMetro * 5 into costoConsumo from Costo where idCosto = 2;
+                select cons_aux - 5 into cons_aux;
+                Select costoConsumo + valorMetro * 10 into costoConsumo from Costo where idCosto = 3;
+                select cons_aux - 10 into cons_aux;
+                Select costoConsumo + valorMetro * cons_aux into costoConsumo from Costo where idCosto = 4;
+            end if;
+        end if;
+    end if;
+Return costoConsumo;
+End;
+$$ DELIMITER ;
