@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS Factura_log (
   FOREIGN KEY (idFactura) REFERENCES Factura(idFactura)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `tpi`.`Concepto_log` (
+CREATE TABLE IF NOT EXISTS Concepto_log (
   `idLog` INT NOT NULL AUTO_INCREMENT,
   `idConcepto`INT NOT NULL,
   `nombreConcepto` VARCHAR(20) NOT NULL,
