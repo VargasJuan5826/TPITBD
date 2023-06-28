@@ -39,7 +39,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE DEFINER=`root`@`%` PROCEDURE `GetUsuarios`()
+CREATE PROCEDURE `GetUsuarios`()
 BEGIN
     SELECT C.idCuenta, U.nombreUsuario FROM Cuenta C INNER JOIN Usuario U ON C.Usuario_idUsuario = U.idUsuario;
 END$$
@@ -47,7 +47,7 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE DEFINER=`root`@`%` PROCEDURE `GetConceptos`()
+CREATE PROCEDURE `GetConceptos`()
 BEGIN
     SELECT idConcepto, nombreConcepto FROM Concepto;
 END$$
