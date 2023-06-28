@@ -58,23 +58,6 @@ CREATE TABLE IF NOT EXISTS `Costo` (
   PRIMARY KEY (`idCosto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `Costo_Log`
---
-
-CREATE TABLE IF NOT EXISTS `Costo_Log` (
-  `idLog` int NOT NULL AUTO_INCREMENT,
-  `operacion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `idCosto` int NOT NULL,
-  `mtsDesde` int DEFAULT NULL,
-  `mtsHasta` int DEFAULT NULL,
-  `valorMetro` float DEFAULT NULL,
-  `fechaRealizacion` datetime NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -108,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `Cuenta_log` (
   `usuario` VARCHAR(200) NOT NULL,
   `operacion` VARCHAR(50) NOT NULL,
   `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`idCuenta`),
+  PRIMARY KEY (`idCuentaLog`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -300,3 +283,20 @@ CREATE TABLE IF NOT EXISTS `FacturaDetalle_log` (
 
 
 
+CREATE TABLE IF NOT EXISTS Factura_log (
+  idLog INT NOT NULL AUTO_INCREMENT,
+  idFactura INT NOT NULL,
+  fechaEvento DATETIME NOT NULL,
+  operacion VARCHAR(10) NOT NULL,
+  PRIMARY KEY (idLog),
+  FOREIGN KEY (idFactura) REFERENCES Factura(idFactura)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `tpi`.`Concepto_log` (
+  `idLog` INT NOT NULL AUTO_INCREMENT,
+  `idConcepto`INT NOT NULL,
+  `nombreConcepto` VARCHAR(20) NOT NULL,
+  `usuario` VARCHAR(200) NOT NULL,
+  `operacion` VARCHAR(50) NOT NULL,
+  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idLog`));

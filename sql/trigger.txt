@@ -1,13 +1,6 @@
 -- ----------------------------CONCEPTO----------------------------
 
-CREATE TABLE `tpi`.`Concepto_log` (
-  `idLog` INT NOT NULL AUTO_INCREMENT,
-  `idConcepto`INT NOT NULL,
-  `nombreConcepto` VARCHAR(20) NOT NULL,
-  `usuario` VARCHAR(200) NOT NULL,
-  `operacion` VARCHAR(50) NOT NULL,
-  `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`idLog`));
+
 
 -- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN CONCEPTO
 DELIMITER $$
@@ -193,7 +186,7 @@ $$ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER usuario_delete BEFORE DELETE ON usuario FOR EACH ROW
 BEGIN
-	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'DELETE');
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(OLD.idUsuario, OLD.nombreUsuario, OLD.fechaAlta, USER(),'DELETE');
 END;
 $$ DELIMITER ;
 
@@ -204,7 +197,7 @@ DELIMITER $$
 CREATE TRIGGER medidor_update BEFORE UPDATE ON medidor FOR EACH ROW
 BEGIN
 	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(OLD.idMedidor, OLD.numeroMedidor, OLD.modeloMedidor, USER(),'UPDATE BEFORE');
-	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'UPDATE AFTER');
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, NEW.modeloMedidor, USER(),'UPDATE AFTER');
 END;
 $$ DELIMITER ;
 
@@ -212,7 +205,7 @@ $$ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER medidor_insert AFTER INSERT ON medidor FOR EACH ROW
 BEGIN
-	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'INSERT');
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, NEW.modeloMedidor, USER(),'INSERT');
 END;
 $$ DELIMITER ;
 
@@ -220,7 +213,7 @@ $$ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER medidor_delete BEFORE DELETE ON medidor FOR EACH ROW
 BEGIN
-	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(NEW.idMedidor, NEW.numeroMedidor, OLD.modeloMedidor, USER(),'DELETE');
+	INSERT INTO Medidor_log(idMedidor, numeroMedidor, modeloMedidor, usuario, operacion) VALUES(OLD.idMedidor, OLD.numeroMedidor, OLD.modeloMedidor, USER(),'DELETE');
 END;
 $$ DELIMITER ;
 
@@ -231,7 +224,7 @@ DELIMITER $$
 CREATE TRIGGER cuenta_update BEFORE UPDATE ON cuenta FOR EACH ROW
 BEGIN
 	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'UPDATE BEFORE');
-	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'UPDATE AFTER');
+	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(NEW.idCuentaLog, NEW.fechaAlta, NEW.fechaBaja, NEW.Usuario_idUsuario, NEW.Medidor_idMedidor, USER(),'UPDATE AFTER');
 END;
 $$ DELIMITER ;
 
@@ -251,3 +244,30 @@ BEGIN
 	INSERT INTO Cuenta_log(idCuentaLog, fechaAlta, fechaBaja, Usuario_idUsuario, Medidor_idMedidor, usuario, operacion) VALUES(OLD.idCuentaLog, OLD.fechaAlta, OLD.fechaBaja, OLD.Usuario_idUsuario, OLD.Medidor_idMedidor, USER(),'DELETE');
 END;
 $$ DELIMITER ;
+
+-- -------------Trigger para las actualizaciones en la tabla Factura--------
+DELIMITER $$
+CREATE TRIGGER factura_update BEFORE UPDATE ON Factura FOR EACH ROW
+BEGIN
+    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
+    VALUES(OLD.idFactura, NOW(), 'UPDATE');
+END $$
+DELIMITER ;
+
+-- Trigger para las inserciones en la tabla Factura
+DELIMITER $$
+CREATE TRIGGER factura_insert AFTER INSERT ON Factura FOR EACH ROW
+BEGIN
+    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
+    VALUES(NEW.idFactura, NOW(), 'INSERT');
+END $$
+DELIMITER ;
+
+-- Trigger para las eliminaciones en la tabla Factura
+DELIMITER $$
+CREATE TRIGGER factura_delete BEFORE DELETE ON Factura FOR EACH ROW
+BEGIN
+    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
+    VALUES(OLD.idFactura, NOW(), 'DELETE');
+END $$
+DELIMITER ;
