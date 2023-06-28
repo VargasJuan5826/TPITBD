@@ -21,6 +21,10 @@ grant select, insert, update, delete on tpi.medidor to medidor@localhost;
 grant medidor@localhost to 'cesar'@'localhost';
 set default role medidor@localhost to cesar@localhost;
 
+-- ----------ASIGNAMOS EL PROCEDIMIENTO AL ROL DE MEDIDOR-------
+GRANT EXECUTE ON PROCEDURE tpi.GetConceptos TO medidor@localhost;  
+GRANT EXECUTE ON PROCEDURE tpi.GetUsuarios TO medidor@localhost;  
+
 -- ----------CREAMOS ROL USUARIO ------------ (maneja tabla usuario)
 create role usuario@localhost; 
 
@@ -62,8 +66,12 @@ set default role facturador@localhost to contador@localhost;
 create role analista@localhost; 
 
 -- ----------OTORGAMOS PERMISOS ANALISTA------------
--- grant ALL PRIVILEGES on tpi.* to analista;
 grant select, insert, update, delete on tpi.* to analista@localhost; 
+
+-- ----------ASIGNAMOS EL PROCEDIMIENTO AL ROL DE ANALISTA-------
+GRANT EXECUTE ON PROCEDURE tpi.GetConceptos TO analista@localhost;  
+GRANT EXECUTE ON PROCEDURE tpi.GetUsuarios TO analista@localhost; 
+GRANT EXECUTE ON PROCEDURE tpi.GenerateFactura TO analista@localhost;    
 
 -- ----------ASIGNAMOS A QUIQUE EL ROL DE ANALISTA------------
 grant analista@localhost to 'quique'@'localhost';
