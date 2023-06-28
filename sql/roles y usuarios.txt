@@ -58,6 +58,9 @@ grant select, insert, update, delete on tpi.mediciones to facturador@localhost;
 grant select, insert, update, delete on tpi.factura to facturador@localhost;
 grant select, insert, update, delete on tpi.facturadetalle to facturador@localhost;
 
+-- ----------ASIGNAMOS EL PROCEDIMIENTO AL ROL DE FACTURADOR-------
+GRANT EXECUTE ON PROCEDURE tpi.GenerateFactura TO facturador@localhost;
+
 -- ----------ASIGNAMOS A CONTADOR EL ROL DE FACTURADOR------------
 Grant facturador@localhost to 'contador'@'localhost';
 set default role facturador@localhost to contador@localhost;
