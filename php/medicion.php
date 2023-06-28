@@ -138,6 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($insertResult) { ?>
         <p>La medición se ha guardado exitosamente.</p>
     <?php } ?>
+    <?php if ($insertResult) { ?>
+        <p>No tiene permisos para realizar esta operacion.</p>
+    <?php } ?>
 </div>
 </body>
 </html>
