@@ -29,7 +29,7 @@ grant select, insert, update, delete on tpi.usuario to usuario@localhost;
 
 -- ----------ASIGNAMOS A JULI EL ROL DE USUARIO------------
 grant usuario@localhost to 'juli'@'localhost';
-set default role analista@localhost to quique@localhost;
+set default role usuario@localhost to juli@localhost;
 
 -- ----------CREAMOS ROL ADMINISTRADOR ------------ (maneja concepto, conceptoxcuenta, cuenta, costo)
 create role administrador@localhost; 
