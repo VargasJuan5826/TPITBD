@@ -20,17 +20,6 @@ if ($db->connect_error) {
     die('Error al conectar a la base de datos: ' . $db->connect_error);
 }
 
-// Consulta para obtener los conceptos
-$conceptosQuery = "CALL GetConceptos()";
-$conceptosResult = $db->query($conceptosQuery);
-
-// Almacenar los resultados de la consulta de conceptos en un array
-$conceptos = array();
-while ($row = $conceptosResult->fetch_assoc()) {
-    $conceptos[] = $row;
-}
-$conceptosResult->close();
-$db->next_result();
 
 // Consulta para obtener las cuentas con el nombre de usuario
 $cuentasQuery = "CALL GetUsuarios()";
@@ -56,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fechaLectura = $_POST['fechaLectura'];
     $lectura = $_POST['lectura'];
     $cuenta_id = $_POST['cuenta_id'];
-    $concepto_id = $_POST['concepto_id'];
 
     // Insertar la medición en la base de datos
     $insertQuery = "INSERT INTO Mediciones (periodo, fechaLectura, lectura, Cuenta_idCuenta) VALUES ('$periodo', '$fechaLectura', $lectura, $cuenta_id)";
@@ -143,13 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php foreach ($cuentas as $cuenta) { ?>
             <option value="<?php echo $cuenta->idCuenta; ?>"><?php echo $cuenta->nombreUsuario; ?></option>
         <?php } ?>
-        </select>
-
-        <label for="concepto_id">Concepto:</label>
-        <select id="concepto_id" name="concepto_id">
-            <?php foreach ($conceptos as $concepto) { ?>
-                <option value="<?php echo $concepto['idConcepto']; ?>"><?php echo $concepto['nombreConcepto']; ?></option>
-            <?php } ?>
         </select>
 
         <input type="submit" value="Registrar Medición">
