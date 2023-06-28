@@ -249,20 +249,21 @@ END;
 $$ DELIMITER ;
 
 -- -------------Trigger para las actualizaciones en la tabla Factura--------
+
+-- Trigger para las actualizaciones en la tabla Factura
 DELIMITER $$
 CREATE TRIGGER factura_update BEFORE UPDATE ON Factura FOR EACH ROW
 BEGIN
-    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
-    VALUES(OLD.idFactura, NOW(), 'UPDATE');
-END $$
-DELIMITER ;
+    INSERT INTO Factura_log(idFactura, fechaEmision, consumo, totalPagar, mediciones_periodo, cuenta_idCuenta, usuario, operacion)VALUES(OLD.idFactura, OLD.fechaEmision, OLD.consumo, OLD.totalPagar, OLD.mediciones_periodo, OLD.cuenta_idCuenta, USER(),'UPDATE BEFORE');
+	INSERT INTO Factura_log(idFactura, fechaEmision, consumo, totalPagar, mediciones_periodo, cuenta_idCuenta, usuario, operacion)VALUES(NEW.idFactura, NEW.fechaEmision, NEW.consumo, NEW.totalPagar, NEW.mediciones_periodo, NEW.cuenta_idCuenta, USER(),'UPDATE AFTER');
+END;
+$$ DELIMITER ;
 
 -- Trigger para las inserciones en la tabla Factura
 DELIMITER $$
 CREATE TRIGGER factura_insert AFTER INSERT ON Factura FOR EACH ROW
 BEGIN
-    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
-    VALUES(NEW.idFactura, NOW(), 'INSERT');
+	INSERT INTO Factura_log(idFactura, fechaEmision, consumo, totalPagar, mediciones_periodo, cuenta_idCuenta, usuario, operacion)VALUES(NEW.idFactura, NEW.fechaEmision, NEW.consumo, NEW.totalPagar, NEW.mediciones_periodo, NEW.cuenta_idCuenta, USER(),'INSERT');
 END $$
 DELIMITER ;
 
@@ -270,7 +271,6 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER factura_delete BEFORE DELETE ON Factura FOR EACH ROW
 BEGIN
-    INSERT INTO Factura_log(idFactura, fechaEvento, operacion)
-    VALUES(OLD.idFactura, NOW(), 'DELETE');
+    INSERT INTO Factura_log(idFactura, fechaEmision, consumo, totalPagar, mediciones_periodo, cuenta_idCuenta, usuario, operacion)VALUES(OLD.idFactura, OLD.fechaEmision, OLD.consumo, OLD.totalPagar, OLD.mediciones_periodo, OLD.cuenta_idCuenta, USER(),'DELETE');
 END $$
 DELIMITER ;

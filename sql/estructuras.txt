@@ -237,29 +237,29 @@ COMMIT;
 CREATE TABLE IF NOT EXISTS `Costo_log` (
   `idLog` INT NOT NULL AUTO_INCREMENT,
   `idCosto` INT NOT NULL,
-  `mtsDesde` FLOAT DEFAULT NULL,
-  `mtsHasta` FLOAT DEFAULT NULL,
-  `valorMetro` FLOAT DEFAULT NULL,
+  `mtsDesde` FLOAT NOT NULL,
+  `mtsHasta` FLOAT NOT NULL,
+  `valorMetro` FLOAT NOT NULL,
   `usuario` VARCHAR(200) NOT NULL,
   `operacion` VARCHAR(50) NOT NULL,
   `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 
 CREATE TABLE IF NOT EXISTS `Factura_log` (
   `idLog` INT NOT NULL AUTO_INCREMENT,
   `idFactura` INT NOT NULL,
-  `fechaEmision` DATETIME DEFAULT NULL,
-  `consumo` FLOAT DEFAULT NULL,
-  `totalPagar` FLOAT DEFAULT NULL,
+  `fechaEmision` DATETIME NOT NULL,
+  `consumo` FLOAT NOT NULL,
+  `totalPagar` FLOAT NOT NULL,
   `mediciones_periodo` DATE NOT NULL,
   `cuenta_idCuenta` INT NOT NULL,
   `usuario` VARCHAR(200) NOT NULL,
   `operacion` VARCHAR(50) NOT NULL,
   `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 
 CREATE TABLE IF NOT EXISTS `FacturaDetalle_log` (
