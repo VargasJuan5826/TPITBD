@@ -177,7 +177,7 @@ DELIMITER $$
 CREATE TRIGGER usuario_update BEFORE UPDATE ON usuario FOR EACH ROW
 BEGIN
 	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(OLD.idUsuario, OLD.nombreUsuario, OLD.fechaAlta, USER(),'UPDATE BEFORE');
-	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'UPDATE AFTER');
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, NEW.fechaAlta, USER(),'UPDATE AFTER');
 END;
 $$ DELIMITER ;
 
@@ -185,7 +185,7 @@ $$ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER usuario_insert AFTER INSERT ON usuario FOR EACH ROW
 BEGIN
-	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, OLD.fechaAlta, USER(),'INSERT');
+	INSERT INTO Usuario_log(idUsuario, nombreUsuario, fechaAlta, usuario, operacion) VALUES(NEW.idUsuario, NEW.nombreUsuario, NEW.fechaAlta, USER(),'INSERT');
 END;
 $$ DELIMITER ;
 
