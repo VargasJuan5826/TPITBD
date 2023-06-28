@@ -11,6 +11,7 @@ DECLARE periodo_cursor date;
 DECLARE idcuenta_cursor int;
 DECLARE lectura_cursor float;
 DECLARE totalAPagarFactura float;
+DECLARE aux int;
 DECLARE mediciones_sin_facturar CURSOR FOR SELECT periodo, Cuenta_idCuenta, lectura from Mediciones m where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and periodo <= periodoAFacturar order by periodo asc;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET listo = TRUE;
 select '0' into cont;
@@ -21,13 +22,16 @@ select '0' into importeTotal;
             IF listo THEN 
 				LEAVE med_sin_fac_loop;
             else
-                START TRANSACTION;
+				select count(*) into aux FROM ConceptoxCuenta where Cuenta_idCuenta = idcuenta_cursor;
+                if aux > 0 then
+					START TRANSACTION;
 					select calcularTotalAPagar(idcuenta_cursor, calcularCostoConsumo(obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor))) into totalAPagarFactura;
 					INSERT INTO `Factura` (`fechaEmision`, `consumo`, `totalPagar`, `mediciones_periodo`, `cuenta_idCuenta`) VALUE (CURRENT_TIMESTAMP, obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor), totalAPagarFactura, periodo_cursor, idcuenta_cursor);
                     select cont + 1 into cont;
                     select importeTotal + totalAPagarFactura into importeTotal;
                     call InsertDetalleFactura(periodo_cursor, idcuenta_cursor, lectura_cursor, (Select idFactura From Factura where mediciones_periodo = periodo_cursor and cuenta_idCuenta = idcuenta_cursor));
-                COMMIT;
+					COMMIT;
+                END IF;
             END IF;
 		End LOOP med_sin_fac_loop;
 	Close mediciones_sin_facturar;
@@ -65,6 +69,7 @@ $$ DELIMITER ;
 
 -- CREAMOS UNA FUNCION QUE DEVUELVE EL CONSUMO ACTUAL A PARTIR DE UN IDCUENTA Y UNA LECTURAACTUAL
 DELIMITER $$
+DROP FUNCTION IF EXISTS obtenerConsumo $$
 CREATE FUNCTION obtenerConsumo(idCuenta Int, periodoAct date, lecturaActual float) RETURNS Float DETERMINISTIC
 Begin
 	DECLARE lectAnt Float;
@@ -83,6 +88,7 @@ $$ DELIMITER ;
 
 -- CREAMOS UNA FUNCION QUE DEVUELVE EL PERIODO ANTERIOR DE UNA MEDICION DADO UN IDCUENTA
 DELIMITER $$
+DROP FUNCTION IF EXISTS periodoAnterior $$
 CREATE FUNCTION periodoAnterior(idCuenta Int, periodoActual date) RETURNS Date DETERMINISTIC
 Begin
 	DECLARE perAnt Date;
@@ -97,6 +103,7 @@ $$ DELIMITER ;
 
 -- CREAMOS UNA FUNCION PARA CALCULAR LOS COSTOS DE LOS CONSUMOS
 DELIMITER $$
+DROP FUNCTION IF EXISTS calcularCostoConsumo $$
 CREATE FUNCTION calcularCostoConsumo(consumo float) RETURNS Float DETERMINISTIC
 Begin
 	declare costoConsumo float;
@@ -132,6 +139,7 @@ $$ DELIMITER ;
 
 -- CREAMOS UNA FUNCION QUE DEVUELVE EL TOTAL A PAGAR DE UNA FACTURA EN PARTICULAR
 DELIMITER $$
+DROP FUNCTION IF EXISTS calcularTotalAPagar $$
 CREATE FUNCTION calcularTotalAPagar(idCuenta INT, costoConsumo FLOAT) RETURNS FLOAT DETERMINISTIC
 Begin
 	DECLARE costoTotal FLOAT;
