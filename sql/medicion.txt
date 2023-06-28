@@ -1,0 +1,1 @@
+INSERT INTO Mediciones (periodo, fechaLectura, lectura, Cuenta_idCuenta) VALUES ('$periodo', '$fechaLectura', $lectura, $cuenta_id)";

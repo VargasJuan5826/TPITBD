@@ -57,7 +57,8 @@ Grant facturador to 'contador'@'localhost';
 create role analista; 
 
 -- ----------OTORGAMOS PERMISOS ANALISTA------------
-grant ALL PRIVILEGES on tpi.* to analista;
+-- grant ALL PRIVILEGES on tpi.* to analista;
+grant select, insert, update, delete on tpi.* to analista; 
 
 -- ----------ASIGNAMOS A QUIQUE EL ROL DE ANALISTA------------
 grant analista to 'quique'@'localhost';
