@@ -58,23 +58,6 @@ CREATE TABLE IF NOT EXISTS `Costo` (
   PRIMARY KEY (`idCosto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `Costo_Log`
---
-
-CREATE TABLE IF NOT EXISTS `Costo_Log` (
-  `idLog` int NOT NULL AUTO_INCREMENT,
-  `operacion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `idCosto` int NOT NULL,
-  `mtsDesde` int DEFAULT NULL,
-  `mtsHasta` int DEFAULT NULL,
-  `valorMetro` float DEFAULT NULL,
-  `fechaRealizacion` datetime NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
