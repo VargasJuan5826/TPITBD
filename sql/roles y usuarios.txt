@@ -1,65 +1,63 @@
-------------CREAMOS LOS USUARIOS------------
 -- (medidor)
-create user ‘cesar’@’localhost’ identified by ‘cesar2023’;
+create user 'cesar'@'localhost' identified by 'cesar2023';
 -- (usuario)
-create user ‘juli’@’localhost’ identified by ‘juli2023’; 
+create user 'juli'@'localhost' identified by 'juli2023'; 
 -- (administrador)
-create user ‘juan’@’localhost’ identified by ‘juan2023’; 
+create user 'juan'@'localhost' identified by 'juan023';  
 -- (analista)
-create user ‘quique’@’localhost’ identified by ‘quique2023’;
+create user 'quique'@'localhost' identified by 'quique2023'; 
 -- (administrador)
-create user ‘suenaga’@’localhost’ identified by ‘suenaga2023’;
+create user 'suenaga'@'localhost' identified by 'suenaga2023'; 
 -- (facturador)
-create user ‘contador’@’localhost’ identified by ‘contador2023’; 
+create user 'contador'@'localhost' identified by 'contador2023'; 
 
-------------CREAMOS ROL MEDIDOR------------ (maneja tabla medidor)
+-- ----------CREAMOS ROL MEDIDOR------------ (maneja tabla medidor)
 create role medidor; 
 
-------------OTORGAMOS PERMISOS MEDIDOR------------
+-- ----------OTORGAMOS PERMISOS MEDIDOR------------
 grant select, insert, update, delete on tpi.medidor to medidor;
 
-------------ASIGNAMOS A CESAR EL ROL DE MEDIDOR------------
-grant medidor to ‘cesar’@’localhost’;
+-- ----------ASIGNAMOS A CESAR EL ROL DE MEDIDOR------------
+grant medidor to 'cesar'@'localhost';
 
-------------CREAMOS ROL USUARIO ------------ (maneja tabla usuario)
+-- ----------CREAMOS ROL USUARIO ------------ (maneja tabla usuario)
 create role usuario; 
 
-------------OTORGAMOS PERMISOS USUARIO------------
+-- ----------OTORGAMOS PERMISOS USUARIO------------
 grant select, insert, update, delete on tpi.usuario to usuario;
 
-------------ASIGNAMOS A JULI EL ROL DE USUARIO------------
-grant usuario to ‘juli’@’localhost’;
+-- ----------ASIGNAMOS A JULI EL ROL DE USUARIO------------
+grant usuario to 'juli'@'localhost';
 
-------------CREAMOS ROL ADMINISTRADOR ------------ (maneja concepto, conceptoxcuenta, cuenta, costo)
+-- ----------CREAMOS ROL ADMINISTRADOR ------------ (maneja concepto, conceptoxcuenta, cuenta, costo)
 create role administrador; 
 
-------------OTORGAMOS PERMISOS ADMINISTRADOR------------
+-- ----------OTORGAMOS PERMISOS ADMINISTRADOR------------
 grant select, insert, update, delete on tpi.concepto to administrador;
 grant select, insert, update, delete on tpi.conceptoxcuenta to administrador;
 grant select, insert, update, delete on tpi.cuenta to administrador;
 grant select, insert, update, delete on tpi.costo to administrador;
 
-------------ASIGNAMOS A JUAN y SUEGANA EL ROL DE ADMINISTRADOR------------
-Grant administrador to ‘juan’@’localhost’;
-Grant administrador to ‘suenaga’@’localhost’;
+-- ----------ASIGNAMOS A JUAN y SUEGANA EL ROL DE ADMINISTRADOR------------
+Grant administrador to 'juan'@'localhost';
+Grant administrador to 'suenaga'@'localhost';
 
-------------CREAMOS ROL FACTURADOR ------------ (maneja mediciones, factura, facturadetalle)
+-- ----------CREAMOS ROL FACTURADOR ------------ (maneja mediciones, factura, facturadetalle)
 create role facturador; 
 
-------------OTORGAMOS PERMISOS FACTURADOR------------
+-- ----------OTORGAMOS PERMISOS FACTURADOR------------
 grant select, insert, update, delete on tpi.mediciones to facturador;
 grant select, insert, update, delete on tpi.factura to facturador;
 grant select, insert, update, delete on tpi.facturadetalle to facturador;
 
-------------ASIGNAMOS A CONTADOR EL ROL DE FACTURADOR------------
-Grant facturador to ‘contador’@’localhost’;
+-- ----------ASIGNAMOS A CONTADOR EL ROL DE FACTURADOR------------
+Grant facturador to 'contador'@'localhost';
 
-------------CREAMOS ROL ANALISTA------------ (maneja todo)
+-- ----------CREAMOS ROL ANALISTA------------ (maneja todo)
 create role analista; 
 
-------------OTORGAMOS PERMISOS ANALISTA------------
+-- ----------OTORGAMOS PERMISOS ANALISTA------------
 grant ALL PRIVILEGES on tpi.* to analista;
 
-------------ASIGNAMOS A QUIQUE EL ROL DE ANALISTA------------
-grant analista to ‘quique’@’localhost’;
-
+-- ----------ASIGNAMOS A QUIQUE EL ROL DE ANALISTA------------
+grant analista to 'quique'@'localhost';
