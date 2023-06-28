@@ -1,7 +1,6 @@
 -- ----------------------------CONCEPTO----------------------------
 
 
-
 -- CREAMOS UN TRIGGER PARA LAS ACTUALIZACIONES QUE SE REALICEN EN CONCEPTO
 DELIMITER $$
 CREATE TRIGGER concepto_update BEFORE UPDATE ON concepto FOR EACH ROW
@@ -102,7 +101,7 @@ BEGIN
 END;
 $$ DELIMITER ;
 
--- --------------------------------------------------------
+-- -----------------------COSTO---------------------------------
 
 
 DELIMITER $$
@@ -134,7 +133,7 @@ END;
 $$ DELIMITER ;
 
 
-
+-- -----------------------FacturaDetalle---------------------------------
 
 DELIMITER $$
 CREATE TRIGGER factura_detalle_delete BEFORE DELETE ON FacturaDetalle FOR EACH ROW

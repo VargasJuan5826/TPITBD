@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `Factura_log` (
 CREATE TABLE IF NOT EXISTS `FacturaDetalle_log` (
   `idLog` INT NOT NULL AUTO_INCREMENT,
   `idRenglon` INT NOT NULL,
-  `costoUnitario` FLOAT DEFAULT NULL,
+  `costoUnitario` FLOAT NOT NULL,
   `Cuenta_has_Concepto_Cuenta_idCuenta` INT NOT NULL,
   `Cuenta_has_Concepto_Concepto_idConcepto` INT NOT NULL,
   `idFactura` INT NOT NULL,
@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `FacturaDetalle_log` (
   `operacion` VARCHAR(50) NOT NULL,
   `fechaRealizacion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 
 CREATE TABLE IF NOT EXISTS Concepto_log (
