@@ -276,16 +276,6 @@ CREATE TABLE IF NOT EXISTS `FacturaDetalle_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-
-CREATE TABLE IF NOT EXISTS Factura_log (
-  idLog INT NOT NULL AUTO_INCREMENT,
-  idFactura INT NOT NULL,
-  fechaEvento DATETIME NOT NULL,
-  operacion VARCHAR(10) NOT NULL,
-  PRIMARY KEY (idLog),
-  FOREIGN KEY (idFactura) REFERENCES Factura(idFactura)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 CREATE TABLE IF NOT EXISTS Concepto_log (
   `idLog` INT NOT NULL AUTO_INCREMENT,
   `idConcepto`INT NOT NULL,
