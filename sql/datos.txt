@@ -252,10 +252,10 @@ INSERT INTO `Mediciones` (`periodo`, `fechaLectura`, `lectura`, `Cuenta_idCuenta
 -- Volcado de datos para la tabla `Concepto`
 --
 
-INSERT INTO `Concepto` (`idConcepto`, `nombreConcepto`) VALUES
-(1, 'Consumo'),
-(2, 'Agua'),
-(3, 'Otros');
+INSERT INTO `Concepto` (`idConcepto`, `nombreConcepto`) VALUES(1, 'Consumo');
+INSERT INTO `Concepto` (`idConcepto`, `nombreConcepto`) VALUES(2, 'Reparaciones');
+INSERT INTO `Concepto` (`idConcepto`, `nombreConcepto`) VALUES(3, 'Equipo nuevo');
+INSERT INTO `Concepto` (`idConcepto`, `nombreConcepto`) VALUES(4, 'Mantenimiento');
 
 --
 -- Volcado de datos para la tabla `ConceptoxCuenta`

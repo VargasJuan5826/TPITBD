@@ -11,8 +11,7 @@ DECLARE periodo_cursor date;
 DECLARE idcuenta_cursor int;
 DECLARE lectura_cursor float;
 DECLARE totalAPagarFactura float;
-DECLARE aux int;
-DECLARE mediciones_sin_facturar CURSOR FOR SELECT m.periodo, m.Cuenta_idCuenta, m.lectura from Mediciones m inner join Cuenta c on m.Cuenta_idCuenta=c.idCuenta where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and m.periodo <= periodoAFacturar and c.fechaBaja IS NULL order by m.periodo asc;
+DECLARE mediciones_sin_facturar CURSOR FOR SELECT m.periodo, m.Cuenta_idCuenta, m.lectura from Mediciones m inner join Cuenta c on m.Cuenta_idCuenta=c.idCuenta inner join conceptoxcuenta cc on cc.Cuenta_idCuenta=c.idCuenta where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and m.periodo <= periodoAFacturar and c.fechaBaja IS NULL group by c.idCuenta, m.periodo order by m.periodo asc;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET listo = TRUE;
 select '0' into cont;
 select '0' into importeTotal;
@@ -22,21 +21,19 @@ select '0' into importeTotal;
             IF listo THEN 
 				LEAVE med_sin_fac_loop;
             else
-				select count(*) into aux FROM ConceptoxCuenta where Cuenta_idCuenta = idcuenta_cursor;
-                if aux > 0 then
-					START TRANSACTION;
+				START TRANSACTION;
 					select calcularTotalAPagar(idcuenta_cursor, calcularCostoConsumo(obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor))) into totalAPagarFactura;
 					INSERT INTO `Factura` (`fechaEmision`, `consumo`, `totalPagar`, `mediciones_periodo`, `cuenta_idCuenta`) VALUE (CURRENT_TIMESTAMP, obtenerConsumo(idcuenta_cursor, periodo_cursor, lectura_cursor), totalAPagarFactura, periodo_cursor, idcuenta_cursor);
-                    select cont + 1 into cont;
-                    select importeTotal + totalAPagarFactura into importeTotal;
-                    call InsertDetalleFactura(periodo_cursor, idcuenta_cursor, lectura_cursor, (Select idFactura From Factura where mediciones_periodo = periodo_cursor and cuenta_idCuenta = idcuenta_cursor));
-					COMMIT;
-                END IF;
+					select cont + 1 into cont;
+					select importeTotal + totalAPagarFactura into importeTotal;
+					call InsertDetalleFactura(periodo_cursor, idcuenta_cursor, lectura_cursor, (Select idFactura From Factura where mediciones_periodo = periodo_cursor and cuenta_idCuenta = idcuenta_cursor));
+				COMMIT;
             END IF;
 		End LOOP med_sin_fac_loop;
 	Close mediciones_sin_facturar;
 END;
 $$ DELIMITER ;
+
 
 -- CREAMOS UN PROCEDIMIENTO PARA INSERTAR LOS DETALLES DE UNA FACTURA
 DELIMITER $$
