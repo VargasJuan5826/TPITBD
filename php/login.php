@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-group input {
-            width: 100%;
+            width: 97%;
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 3px;

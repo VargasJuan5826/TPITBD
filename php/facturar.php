@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         input[type="date"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -92,6 +92,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+        .logout {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .logout a {
+            color: #000;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -108,7 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Se han generado <?php echo $cont; ?> facturas exitosamente.</p>
         <p>Importe total: $<?php echo $importeTotal; ?></p>
     <?php } ?>
-
+    <div class="logout">
+            <a href="menu.php">Volver</a>
+    </div>
 </div>
 </body>
 </html>

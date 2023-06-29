@@ -40,7 +40,7 @@ $username = $_SESSION['username'];
 
         .button {
             display: block;
-            width: 100%;
+            width: 95%;
             padding: 10px;
             background-color: #4caf50;
             color: #fff;
@@ -58,6 +58,7 @@ $username = $_SESSION['username'];
 
         .logout {
             text-align: center;
+            font-weight: bold;
         }
 
         .logout a {
