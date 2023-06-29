@@ -108,9 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Se han generado <?php echo $cont; ?> facturas exitosamente.</p>
         <p>Importe total: $<?php echo $importeTotal; ?></p>
     <?php } ?>
-    <?php if (!$insertResult) { ?>
-        <p>No tiene permisos para generar facturas.</p>
-    <?php } ?>
+
 </div>
 </body>
 </html>
