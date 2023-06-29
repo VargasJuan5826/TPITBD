@@ -1,4 +1,4 @@
-call GenerateFactura("2023-09-01", @cantidadFacturasEmitidas, @importeTotalFacturas); -- en "2023-06-01" iría una variable que recibe el periodo ingresado en la pagina web
+call GenerateFactura("2025-01-01", @cantidadFacturasEmitidas, @importeTotalFacturas); -- en "2023-06-01" iría una variable que recibe el periodo ingresado en la pagina web
 -- Select @cantidadFacturasEmitidas as 'Cantidad de Facturas Emitidas', @importeTotalFacturas as 'Importe Total de las Facturas Emitidas'; -- este es para ver cuantas facturas se emitieron y el importe total de todas las facturas emitidas
 
 -- CREAMOS EL PROCEDIMIENTO DE GENERAR LAS FACTURAS
@@ -12,7 +12,7 @@ DECLARE idcuenta_cursor int;
 DECLARE lectura_cursor float;
 DECLARE totalAPagarFactura float;
 DECLARE aux int;
-DECLARE mediciones_sin_facturar CURSOR FOR SELECT periodo, Cuenta_idCuenta, lectura from Mediciones m where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and periodo <= periodoAFacturar order by periodo asc;
+DECLARE mediciones_sin_facturar CURSOR FOR SELECT m.periodo, m.Cuenta_idCuenta, m.lectura from Mediciones m inner join Cuenta c on m.Cuenta_idCuenta=c.idCuenta where not exists (select periodo, Cuenta_idCuenta from Factura f where m.periodo = f.mediciones_periodo and m.Cuenta_idCuenta = f.cuenta_idCuenta) and m.periodo <= periodoAFacturar and c.fechaBaja IS NULL order by m.periodo asc;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET listo = TRUE;
 select '0' into cont;
 select '0' into importeTotal;
